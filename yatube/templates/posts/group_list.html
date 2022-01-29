@@ -1,0 +1,48 @@
+<!DOCTYPE html> <!-- Используется html 5 версии -->
+<html lang="ru">
+<!-- Язык сайта - русский -->
+{% extends 'base.html' %}
+
+<head>
+  <title>
+    {% block title %}
+    {{ title }}
+    {% endblock %}
+  </title>
+</head>
+
+<body>
+  <header>
+    <!-- Это тег шаблонизатора include, сюда будет включён код
+      из файла includes/header.html -->
+    {% include 'includes/header.html' %}
+  </header>
+  <main>
+    <div class="container">
+      {% block content %}
+      <h1>{{ Group.title }}</h1>
+      <p>
+        {{ Group.description }}
+      </p>
+      <article>
+       {% for post in posts %}
+        <p>Группа: {{ post.group }}</p>
+        <ul>
+          <li>
+            Автор: {{ post.author.get_full_name }}
+          </li>
+          <li>Дата публикации: {{ post.pub_date|date:"j F Y" }}</li>
+        </ul>
+        <p>{{ post.text }}</p>
+        {% if not forloop.last %}
+        <hr>{% endif %}
+       {% endfor %}
+      </article>
+      {% endblock %}
+      <!-- под последним постом нет линии -->
+    </div>
+  </main>
+  <footer>
+    {% include 'includes/footer.html' %}
+  </footer>
+</body>
