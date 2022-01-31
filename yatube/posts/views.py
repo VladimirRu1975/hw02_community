@@ -13,12 +13,13 @@ def index(request):
     }
     return render(request, 'posts/index.html', context)
 
+
 def group_posts(request, slug):
 
     group = get_object_or_404(Group, slug=slug)
     posts = group.posts.all()[:10]
     context = {
-        'title':'Посты группы',
+        'title': 'Все посты группы',
         'group': group,
         'posts': posts,
     }
