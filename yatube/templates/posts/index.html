@@ -5,7 +5,7 @@
 {% block content %}
   <h1>Последние обновления на сайте</h1>
     <article>
-      {% for post in posts %}
+      {% for post in page_obj %}
       <ul>
         <li>
           Автор: {{ post.author.get_full_name }}
@@ -22,6 +22,7 @@
       {% if not forloop.last %}
       <hr>{% endif %}
       {% endfor %}
+      {% include 'posts/includes/paginator.html' %}
     </article>
 {% endblock %}
 
