@@ -30,14 +30,33 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    # Здесь код запроса к модели и создание словаря контекста
+    posts = Post.objects.filter(author=username).order_by('-pub_date')
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    title = 'Страница пользователя'
     context = {
+        'author': User.objects.get(username=username),
+        'posts': posts,
+        'page_obj': page_obj,
+        'title': title,
     }
     return render(request, 'posts/profile.html', context)
 
 
 def post_detail(request, post_id):
-    # Здесь код запроса к модели и создание словаря контекста
+    post = Post.objects.get(id=post_id)
+    if request.method == 'GET':
+        if request.user != post.author:
+            return post_detail(request, post_id)
+        form = PostForm(instance=post)
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect(f'/profile/{post.author}')
     context = {
+        'form': form,
+        'post': post,
     }
-    return render(request, 'posts/post_detail.html', context)
+    return render(request, 'posts/create_post.html', context)
